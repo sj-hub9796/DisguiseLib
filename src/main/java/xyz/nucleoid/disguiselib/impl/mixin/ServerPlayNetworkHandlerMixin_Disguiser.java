@@ -5,7 +5,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerPosition;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
@@ -185,7 +184,7 @@ public abstract class ServerPlayNetworkHandlerMixin_Disguiser extends ServerComm
     private void disguiselib$moveDisguiseEntity(PlayerMoveC2SPacket packet, CallbackInfo ci) {
         if(((EntityDisguise) this.player).isDisguised() && ((EntityDisguise) this.player).getDisguiseType() != EntityType.PLAYER) {
             // Moving disguise for the disguised player
-            EntityPositionS2CPacket s2CPacket = new EntityPositionS2CPacket(((EntityDisguise) this.player).getDisguiseEntity().getId(), new PlayerPosition(player.getSyncedPos(), Vec3d.ZERO, player.getYaw(), player.getPitch()), Set.of(), false);
+            EntityPositionS2CPacket s2CPacket = new EntityPositionS2CPacket(((EntityDisguise) this.player).getDisguiseEntity());
             EntitySetHeadYawS2CPacket headYawS2CPacket = new EntitySetHeadYawS2CPacket(this.player, (byte)((int)(this.player.getHeadYaw() * 256.0F / 360.0F)));
 
             //noinspection ConstantConditions

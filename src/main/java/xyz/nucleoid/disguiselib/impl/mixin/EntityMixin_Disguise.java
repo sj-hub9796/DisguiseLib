@@ -9,7 +9,6 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerPosition;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
@@ -149,7 +148,7 @@ public abstract class EntityMixin_Disguise implements EntityDisguise, DisguiseUt
         } else {
             // Why null check? Well, if entity was disguised via EntityDisguise#disguiseAs(Entity), this field is already set
             if (this.disguiselib$disguiseEntity == null || this.disguiselib$disguiseEntity.getType() != entityType)
-                this.disguiselib$disguiseEntity = entityType.create(world, SpawnReason.LOAD);
+                this.disguiselib$disguiseEntity = entityType.create(world);
 
             if (this.disguiselib$profile != null) {
                 // Previous type was player, we have to send a player remove packet
@@ -429,15 +428,7 @@ public abstract class EntityMixin_Disguise implements EntityDisguise, DisguiseUt
         // more than once per second -> movement isn't as "blocky"
         if(this.isDisguised()) {
             if(this.world.getServer() != null && !(this.disguiselib$disguiseEntity instanceof LivingEntity) && !(this.disguiselib$entity instanceof PlayerEntity))
-                this.world.getServer().getPlayerManager().sendToDimension(
-                        new EntityPositionS2CPacket(
-                                this.disguiselib$entity.getId(),
-                                new PlayerPosition(
-                                        this.disguiselib$entity.getSyncedPos(),
-                                        this.disguiselib$entity.getVelocity(),
-                                        this.disguiselib$entity.getYaw(),
-                                        this.disguiselib$entity.getPitch()
-                                ), Set.of(), this.onGround), this.world.getRegistryKey());
+                this.world.getServer().getPlayerManager().sendToDimension(new EntityPositionS2CPacket(this.disguiselib$entity), this.world.getRegistryKey());
             else if(this.disguiselib$entity instanceof ServerPlayerEntity && ++this.disguiselib$ticks % 40 == 0 && this.disguiselib$disguiseEntity != null) {
                 // "Disguised as" message
                 MutableText msg = Text.literal("You are disguised as ")
@@ -491,7 +482,7 @@ public abstract class EntityMixin_Disguise implements EntityDisguise, DisguiseUt
             } else {
                 NbtCompound disguiseEntityTag = disguiseTag.getCompound("DisguiseEntity");
                 if(!disguiseEntityTag.isEmpty())
-                    this.disguiselib$disguiseEntity = EntityType.loadEntityWithPassengers(disguiseEntityTag, this.world, SpawnReason.LOAD, (entityx) -> entityx);
+                    this.disguiselib$disguiseEntity = EntityType.loadEntityWithPassengers(disguiseEntityTag, this.world, (entityx) -> entityx);
             }
         }
     }

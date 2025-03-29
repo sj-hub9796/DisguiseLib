@@ -144,7 +144,7 @@ public class DisguiseCommand {
         nbt.putString("id", disguise.toString());
 
         NbtCompound finalNbt = nbt;
-        entities.forEach(entity -> EntityType.loadEntityWithPassengers(finalNbt, ctx.getSource().getWorld(), SpawnReason.LOAD, (entityx) -> {
+        entities.forEach(entity -> EntityType.loadEntityWithPassengers(finalNbt, ctx.getSource().getWorld(), (entityx) -> {
             if(entity == src.getEntity()) {
                 if(src.hasPermissionLevel(2))
                     ((EntityDisguise) entity).disguiseAs(entityx);
