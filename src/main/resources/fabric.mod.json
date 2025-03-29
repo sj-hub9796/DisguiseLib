@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Disguise Library",
-  "description": "A (server-side) library for disguising entities in Minecraft.",
+  "description": "A library for disguising entities in Minecraft.",
   "authors": [
     "samo_lego"
   ],
